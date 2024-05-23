@@ -1,0 +1,45 @@
+name: Build Oxide.Native
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-20.04, ubuntu-18.04, debian-12, debian-11, debian-10, debian-9]
+        
+    steps:
+      - uses: actions/checkout@v2
+      - uses: lukka/get-cmake@v3
+
+      - name: Install linux dependencies
+        if: matrix.os != 'windows-latest'
+        run: |
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get install -y build-essentials
+
+      - name: Install windows dependencies
+        if: matrix.os == 'windows-latest'
+        run: |
+        choco install -y visualstudio2019buildtools visualstudio2019-workload-vctools
+        echo "##[add-path]C:\\Program Files\\CMake\\bin" >> $env:GITHUB_ENV
+
+      - name: Configure CMake
+        run: cmake -B build -S .
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Oxide.Native-${{ matrix.os }}
+          path: build/*.so, build/*.dll
