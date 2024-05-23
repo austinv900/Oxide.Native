@@ -55,6 +55,6 @@ jobs:
         with:
           name: Oxide.Native-${{ matrix.os }}
           path: |
-          build/**/Oxide.Native.so
-          build/**/Oxide.Native.dll
-          !build/CMakeFiles/
+            build/**/Oxide.Native.so
+            build/**/Oxide.Native.dll
+            !build/CMakeFiles/
