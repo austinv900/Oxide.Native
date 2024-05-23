@@ -8,9 +8,6 @@ set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 # Include directories
 include_directories(${SRC_DIR})
 
-# Add source directory
-add_subdirectory(${SRC_DIR})
-
 # Source files
 set(SOURCES
     ${SRC_DIR}/OxideNative.cpp
