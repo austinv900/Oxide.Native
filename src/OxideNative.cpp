@@ -12,11 +12,13 @@ bool STDCALL IsSymbolicLink(const char* path) {
 	DWORD attributes = GetFileAttributesA(path);
 	if (attributes == INVALID_FILE_ATTRIBUTES) {
 		lastErrorCode = static_cast<int>(GetLastError());
+		return false;
 	}
 	return (attributes != INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_REPARSE_POINT);
 #else
 	struct stat buf;
 	if (lstat(path, &buf) != 0) {
+		lastErrorCode = errno;
 		return false;
 	}
 	return S_ISLNK(buf.st_mode);
@@ -27,6 +29,7 @@ bool STDCALL ResolveSymbolicLink(const char* path, char* resolvedPath, int buffe
 #ifdef _WIN32
 	const HANDLE h_file = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (h_file == INVALID_HANDLE_VALUE) {
+		lastErrorCode = static_cast<int>(GetLastError());
 		return false;
 	}
 	DWORD length = GetFinalPathNameByHandleA(h_file, resolvedPath, bufferLen, FILE_NAME_NORMALIZED);
@@ -40,12 +43,13 @@ bool STDCALL ResolveSymbolicLink(const char* path, char* resolvedPath, int buffe
 	}
 #else
 	ssize_t length = readlink(path, resolvedPath, bufferLen - 1);
-	if (length > 0 && length < bufferLen) {
+	if (length >= 0 && length < bufferLen) {
 		resolvedPath[length] = '\0';
 		*resolvedLen = length;
 		return true;
 	}
 	else {
+		lastErrorCode = errno;
 		return false;
 	}
 #endif
