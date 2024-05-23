@@ -3,16 +3,22 @@ project(OxideNative)
 
 set(CMAKE_CXX_STANDARD 11)
 
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+
+# Include directories
+include_directories(${SRC_DIR})
+
+# Add source directory
+add_subdirectory(${SRC_DIR})
+
 # Source files
 set(SOURCES
-    OxideNative.cpp
+    ${SRC_DIR}/OxideNative.cpp
 )
 
 # Add library
 add_library(OxideNative SHARED ${SOURCES})
 
-# Include directories
-include_directories(${CMAKE_SOURCE_DIR})
 
 # Set properties for Windows
 if (WIN32)
