@@ -40,8 +40,11 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
+      - name: List build directory contents
+        run: ls -R build
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: Oxide.Native-${{ matrix.os }}
-          path: build/*.so, build/*.dll
+          path: build/**/*.{dll,so}
