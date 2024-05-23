@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-20.04, ubuntu-18.04, debian-12, debian-11, debian-10, debian-9]
+        os: [windows-latest, ubuntu-24.04, ubuntu-22.04, debian-12, debian-11]
         
     steps:
       - name: Checkout code
@@ -47,4 +47,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Oxide.Native-${{ matrix.os }}
-          path: build/Oxide.Native.*
+          path: build/bin/*.dll, build/bin/*.so, build/lib/*.dll, build/lib/*.so
