@@ -6,5 +6,6 @@
 #include <unistd.h>
 #include <limits.h>
 #include <cstring>
+#include <errno.h>
 #include <sys/stat.h>
 #endif
