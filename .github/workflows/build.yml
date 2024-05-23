@@ -32,7 +32,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           choco install -y visualstudio2019buildtools visualstudio2019-workload-vctools
-          echo "##[add-path]C:\\Program Files\\CMake\\bin" >> $env:GITHUB_ENV
+          echo "C:\\Program Files\\CMake\\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
 
       - name: Configure CMake
         run: cmake -B build -S .
@@ -44,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Oxide.Native-${{ matrix.os }}
-          path: build/**/*.so, build/**/*.dll
+          path: build/*.so, build/*.dll
